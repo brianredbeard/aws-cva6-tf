@@ -36,7 +36,7 @@ variable "ami_id" {
 variable "spot_price" {
   description = "The maximum price to pay for the spot instance"
   type        = string
-  default     = "0.05"
+  default     = null
 }
 
 variable "use_spot_instance" {

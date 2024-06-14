@@ -49,11 +49,13 @@ resource "aws_instance" "cva6" {
   key_name                    = aws_key_pair.deployer.key_name
   security_groups             = [aws_security_group.allow_ssh.name]
   user_data                   = file("${path.module}/cloud-config.yaml")
+  hibernation                 = true
   associate_public_ip_address = true
 
   root_block_device {
     volume_size = 40
     volume_type = "gp3"
+    encrypted   = true
   }
 
   metadata_options {
@@ -67,8 +69,9 @@ resource "aws_instance" "cva6" {
     content {
       market_type = "spot"
       spot_options {
-        max_price          = var.spot_price != null ? var.spot_price : null
-        spot_instance_type = "one-time"
+        instance_interruption_behavior = "hibernate"
+        max_price                      = var.spot_price 
+        spot_instance_type             = "persistent"
       }
     }
   }
