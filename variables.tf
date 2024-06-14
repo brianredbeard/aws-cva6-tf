@@ -19,16 +19,18 @@ variable "subnet_cidr" {
 variable "instance_type" {
   description = "The type of instance to use"
   type        = string
-  default     = "f1.2xlarge"
+  #default     = "f1.2xlarge"
+  default = "t3.large"
 }
 
-# A little buggy at the moment
-# ami-02ab431c7b3297b00
-# "resolve:ssm:/aws/service/marketplace/prod-gimv3gqbpe57k/latest"
+# AWS F1 Development AMI:
+# "resolve:ssm:/aws/service/marketplace/prod-44rhn3lsk7ft2/latest"
+# Centos 7 AMI:
+# "resolve:ssm:/aws/service/marketplace/prod-a77hqdkwpdk3o/latest"
 variable "ami_id" {
   description = "The AMI ID for the FPGA Developer AMI"
   type        = string
-  default     = "ami-02ab431c7b3297b00"
+  default     = "resolve:ssm:/aws/service/marketplace/prod-44rhn3lsk7ft2/latest"
 }
 
 variable "spot_price" {

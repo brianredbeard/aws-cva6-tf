@@ -1,0 +1,41 @@
+#cloud-config
+groups:
+  - riscv: [root]
+
+runcmd:
+  - [sh, -xc, "mkdir -p /srv/riscv/bin"]
+  - [sh, -xc, "git clone https://github.com/riscv/riscv-gnu-toolchain /srv/riscv/src"]
+  - [sh, -xc, "chown -R centos:riscv /srv/riscv"]
+  - [sh, -xc, "chmod -R g+rwX /srv/riscv"]
+
+users:
+  - default
+  - name: cva6
+#    This allows you to import your public keys from your GitHub user
+#    if you use the prefix gh or from another keyserver
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, riscv
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKn0TsJ+v46lLs9XmoQ25BCqhx/arF1Td/BvjN6NBip 
+    lock_passwd: false
+
+package_upgrade: true
+
+packages:
+  - autoconf
+  - automake
+  - git-core
+  - libmpc-devel
+  - mpfr-devel
+  - gmp-devel
+  - gawk
+  - bison
+  - flex
+  - texinfo
+  - gcc
+  - gcc-c++
+  - zlib-devel
+  - curl
+  - centos-release-scl
+  - centos-release-scl-rh
+  - devtoolset-10
