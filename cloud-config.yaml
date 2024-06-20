@@ -3,10 +3,16 @@ groups:
   - riscv: [root]
 
 runcmd:
-  - [sh, -xc, "mkdir -p /srv/riscv/bin"]
-  - [sh, -xc, "git clone https://github.com/riscv/riscv-gnu-toolchain /srv/riscv/src"]
-  - [sh, -xc, "chown -R centos:riscv /srv/riscv"]
-  - [sh, -xc, "chmod -R g+rwX /srv/riscv"]
+  - [bash, -c, "yum install -y devtoolset-11 rh-git227 rh-python38"]
+  - [bash, -c, "echo source /opt/rh/devtoolset-11/enable >> /etc/profile.d/devtoolset-11.sh"]
+  - [bash, -c, "echo source /opt/rh/rh-python38/enable >> /etc/profile.d/rh-python38.sh"]
+  - [bash, -c, "echo source /opt/rh/rh-git227/enable >> /etc/profile.d/rh-git227.sh"]
+  - [bash, -c, "mkdir -p /srv/riscv/bin"]
+  - [bash, -ilxc, "git clone https://github.com/riscv/riscv-gnu-toolchain /srv/riscv/src"]
+  - [bash, -xc, "chown -R centos:riscv /srv/riscv"]
+  - [bash, -xc, "chmod -R g+rwX /srv/riscv"]
+  - [su, -, centos, -c, "/srv/riscv/src/configure --prefix=/srv/riscv --enable-multilib"]
+  - [su, -, centos, -c, "make linux"]
 
 users:
   - default
@@ -16,15 +22,22 @@ users:
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, riscv
     ssh_authorized_keys:
-      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKn0TsJ+v46lLs9XmoQ25BCqhx/arF1Td/BvjN6NBip 
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOKn0TsJ+v46lLs9XmoQ25BCqhx/arF1Td/BvjN6NBip
     lock_passwd: false
 
 package_upgrade: true
 
 packages:
+  - curl
+  - tmux
+  - podman
+  - vim-enhanced
+  - texinfo
+  - zlib-devel
+  - expat-devel
+  - libslirp-devel
   - autoconf
   - automake
-  - git-core
   - libmpc-devel
   - mpfr-devel
   - gmp-devel
@@ -32,10 +45,6 @@ packages:
   - bison
   - flex
   - texinfo
-  - gcc
-  - gcc-c++
-  - zlib-devel
-  - curl
+  - patchutils
   - centos-release-scl
   - centos-release-scl-rh
-  - devtoolset-10
