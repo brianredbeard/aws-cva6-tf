@@ -2,6 +2,15 @@ provider "aws" {
   region = var.region
 }
 
+data "aws_ssm_parameters_by_path" "marketplace_ami" {
+  path = var.marketplace_id
+}
+
+locals {
+  ami_map = nonsensitive(zipmap(data.aws_ssm_parameters_by_path.marketplace_ami.names,
+  data.aws_ssm_parameters_by_path.marketplace_ami.values))
+}
+
 resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
@@ -44,7 +53,7 @@ resource "aws_security_group" "allow_ssh" {
 }
 
 resource "aws_instance" "cva6" {
-  ami                         = var.ami_id
+  ami                         = local.ami_map["${var.marketplace_id}/latest"]
   instance_type               = var.instance_type
   key_name                    = aws_key_pair.deployer.key_name
   security_groups             = [aws_security_group.allow_ssh.name]
@@ -70,7 +79,7 @@ resource "aws_instance" "cva6" {
       market_type = "spot"
       spot_options {
         instance_interruption_behavior = "hibernate"
-        max_price                      = var.spot_price 
+        max_price                      = var.spot_price
         spot_instance_type             = "persistent"
       }
     }

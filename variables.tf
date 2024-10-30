@@ -24,13 +24,15 @@ variable "instance_type" {
 }
 
 # AWS F1 Development AMI:
-# "resolve:ssm:/aws/service/marketplace/prod-44rhn3lsk7ft2/latest"
+# "/aws/service/marketplace/prod-44rhn3lsk7ft2"
 # Centos 7 AMI:
-# "resolve:ssm:/aws/service/marketplace/prod-a77hqdkwpdk3o/latest"
-variable "ami_id" {
+# "/aws/service/marketplace/prod-a77hqdkwpdk3o"
+# These can be verified with the AWS CLI command:
+#   aws ssm get-parameters-by-path --path "/aws/service/marketplace/prod-a77hqdkwpdk3o/"
+variable "marketplace_id" {
   description = "The AMI ID for the FPGA Developer AMI"
   type        = string
-  default     = "resolve:ssm:/aws/service/marketplace/prod-44rhn3lsk7ft2/latest"
+  default     = "/aws/service/marketplace/prod-44rhn3lsk7ft2"
 }
 
 variable "spot_price" {

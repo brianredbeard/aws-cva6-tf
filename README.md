@@ -24,10 +24,10 @@ populated in a `tfvars` file.  Below is an example of a file I use called
 `development.tfvars`:
 
 ```
-instance_type = "t3.2xlarge"
+instance_type     = "t3.2xlarge"
 # Centos AMI
-ami_id            = "ami-08c191625cfb7ee61"
-spot_price = 0.14
+marketplace_id    = "/aws/service/marketplace/prod-a77hqdkwpdk3o/"
+spot_price        = 0.14
 use_spot_instance = true
 ```
 
@@ -40,19 +40,20 @@ between the proposed state (as defined in these files) and the running state.
 
 ## Identify the correct image
 
-### TODO: Integrate suggested changes here:
+Currently this repo is focused around retreiving the AMI ID using AWS SSM
+(formerly "Simple Systems Manager").  This presents the ability to use
+marketplace AMI images, like ones with the Nvidia or Xilinx toolsets installed.
 
-https://github.com/hashicorp/terraform-provider-aws/issues/37967#issuecomment-2168425466 
+Users are encouraged to experiment with other marketplace IDs. As an example,
+one can get the AMI IDs for the CentOS 7 with the following command:
+
+    aws ssm get-parameters-by-path --path "/aws/service/marketplace/prod-a77hqdkwpdk3o/"
+
+If you see the correct sets of images (and one ending in `/latest`), use the
+path to populate the `marketplace_id` variable.
 
 
 <!--
-### Scratch notes:
-
-Different AMI Images
-
-ami-02ab431c7b3297b00
-
-aws/service/marketplace/prod-gimv3gqbpe57k/latest
 
 vim: ts=2 sw=2 et tw=80 sts
 -->
